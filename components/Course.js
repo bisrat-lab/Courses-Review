@@ -3,13 +3,17 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import Stars from 'components/Stars';
+import Stars from './Stars';
 
 const Course = ({ data }) => {
   const { index, title, faculty, code, rating } = data;
+   
+  const {navigate} = useNavigation()
 
-  const infoPressed = () => { };
-
+  const infoPressed = () => {
+    navigate('CourseDetails', {course: data})
+   };
+  
   return (
     <View
       style={{ backgroundColor: index % 2 === 0 ? 'white' : '#F3F3F7' }}>
@@ -25,7 +29,7 @@ const Course = ({ data }) => {
 
         <View style={styles.edges}>
           <TouchableHighlight
-            onPress={infoPressed}
+            onPress={()=>infoPressed()}
             style={styles.button}
             underlayColor="#5398DC">
             <Text style={styles.buttonText}>Details</Text>

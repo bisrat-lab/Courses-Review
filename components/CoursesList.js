@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Platform, SafeAreaView, View, Image, TextInput, FlatList } from 'react-native';
 
-import Course from 'components/Course';
-import Header from 'components/Header';
+import Course from './Course';
+import Header from './Header';
 
 const data = [
     { title: 'Web Application Programming', faculty: 'Asaad Saad', code: 'CS472', rating: 4 },
@@ -16,6 +16,7 @@ const data = [
 ];
 
 export default function CoursesList() {
+    const [courses, secCourse] = useState(data)
     return (
         <SafeAreaView
             style={{
@@ -26,6 +27,11 @@ export default function CoursesList() {
             }}>
             <View>
                 <Header />
+                <FlatList
+                   data = {courses}
+                   renderItem={({item,index})=> <Course data={{...item,index}}/>}
+                   keyExtractor = {(code)=> code.code}
+                />
             </View >
         </SafeAreaView>
     );
