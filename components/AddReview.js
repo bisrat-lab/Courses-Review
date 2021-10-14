@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AntDesign } from "@expo/vector-icons";
 import {
   View,
@@ -7,20 +8,49 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  SafeAreaView,
 } from "react-native";
 
-import Icon from "react-native-vector-icons/FontAwesome";
-import Stars from "./Stars";
 
-const AddReview = () => {
+const AddReview = ({route:{params:{course}}, navigation}) => {
+  
   const [newReview, setNewReview] = useState({
     name: "",
     rating: 0,
     comment: "",
     submitting: false,
   });
+ useEffect(()=>{
+   getData()
+ },[])
+
+const storeData = async () => {
+  try {
+    const jsonValue = JSON.stringify(newReview)
+    await AsyncStorage.setItem(course.code, jsonValue)
+    navigation.goBack()
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+const getData = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem(course.code)
+    if(jsonValue !== null) {
+     setNewReview({...newReview,...JSON.parse(jsonValue)})
+    }
+  } catch(e) {
+    console.log(e)
+  }
+}
+
+
+
+
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
+      
       <Text style={styles.addReview}>Add Review</Text>
       <TextInput
         style={styles.input}
@@ -51,12 +81,24 @@ const AddReview = () => {
       <TextInput
         placeholder="Review"
         style={styles.bogInput}
+        value={newReview.comment}
         onChangeText = {(text)=> setNewReview({...newReview,comment:text})}
       />
-      <TouchableOpacity style={styles.submitButton}>
+      <TouchableOpacity style={styles.submitButton} 
+      onPress={()=>{
+        setNewReview({...newReview, submitting: true})
+        setTimeout(() => {
+          storeData()
+        }, 1000);
+      }}
+      >
           <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
-    </View>
+      {
+        newReview.submitting&& <ActivityIndicator size='large' color='#00ff00'/>
+      }
+      
+    </SafeAreaView>
   );
 };
 

@@ -9,7 +9,7 @@ const CourseDetails = ({route:{params},navigation:{navigate}}) => {
  const course = params.course
 
  const addReview = () => {
-     navigate('AddReview')
+     navigate('AddReview', {course})
  }
 
   return (

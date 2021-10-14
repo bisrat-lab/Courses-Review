@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Platform, SafeAreaView, View, Image, TextInput, FlatList } from 'react-native';
+import { useEffect } from 'react/cjs/react.development';
 
 import Course from './Course';
 import Header from './Header';
@@ -16,7 +17,12 @@ const data = [
 ];
 
 export default function CoursesList() {
-    const [courses, secCourse] = useState(data)
+    const [courses, setCourse] = useState([])
+    const [search, setSearch] = useState('')
+
+    useEffect(()=>{
+        setCourse(data)
+    },[])
     return (
         <SafeAreaView
             style={{
@@ -27,8 +33,15 @@ export default function CoursesList() {
             }}>
             <View>
                 <Header />
+                <TextInput
+                    style ={styles.input}
+                    placeholder="Enter the Name"
+                    onChangeText = {(text)=> setSearch(text)}
+                />
                 <FlatList
-                   data = {courses}
+                   data = {courses.filter((c)=>{
+                       return c.title.toLowerCase().indexOf(search.toLowerCase()) > -1;
+                   })}
                    renderItem={({item,index})=> <Course data={{...item,index}}/>}
                    keyExtractor = {(code)=> code.code}
                 />
