@@ -29,7 +29,7 @@ const Course = ({ data }) => {
 
         <View style={styles.edges}>
           <TouchableHighlight
-            onPress={()=>infoPressed()}
+            onPress={infoPressed}
             style={styles.button}
             underlayColor="#5398DC">
             <Text style={styles.buttonText}>Details</Text>
